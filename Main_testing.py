@@ -117,68 +117,56 @@ from scipy.io import loadmat
 save_path = 'test_results/Kalantari/Proposed/'
 
 data = loadmat('Kalantari/softmask/01.mat')
-print(data.keys())  # показать все переменные в файле
+print(data.keys()) 
 SoftMask = data['SoftMask']
 print("SoftMask shape:", SoftMask.shape)
 
-# Извлекаем исходное изображение
 img = data['SoftMask']
 
-# Если grayscale, делаем 3 канала
 if img.ndim == 2:
     img = np.stack([img] * 3, axis=-1)
 
-# Логарифмическое масштабирование для HDR
-SoftMask_log = np.log1p(img)  # log(1 + x) для избежания нулей
+SoftMask_log = np.log1p(img)
 normalized = cv2.normalize(SoftMask_log, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 cv2.imwrite(save_path + 'SoftMask.png', normalized)
 
 data = loadmat('Kalantari/gt/01.mat')
-print(data.keys())  # показать все переменные в файле
+print(data.keys())
 gt = data['N']
 print("gt shape:", gt.shape)
 
-
-# 1. Загружаем .mat и извлекаем переменную N
 data = loadmat('Kalantari/gt/01.mat')
-gt   = data['N']                    # shape (1000, 1500, 3), dtype float32/float64
+gt   = data['N']
 
-# 2. Приводим к диапазону [0, 255] и типу uint8  ─  вариант «быстрого» SDR
 gt_min, gt_max = gt.min(), gt.max()
 gt_norm = (gt - gt_min) / (gt_max - gt_min + 1e-8)   # → [0,1]
 gt_uint8 = (gt_norm * 255).astype(np.uint8)          # → uint8
 
-# 3. Сохраняем как PNG (OpenCV использует BGR, поэтому меняем каналы)
 cv2.imwrite(save_path + 'gt.png', cv2.cvtColor(gt_uint8, cv2.COLOR_RGB2BGR))
 
 
 
 
 data = loadmat('Kalantari/input/01.mat')
-print(data.keys())  # показать все переменные в файле
+print(data.keys())
 E_hat = data['E_hat']
 print("E_hat shape:", E_hat.shape)
 
-# Извлекаем исходное изображение
 img = data['E_hat']
 
-# Если grayscale, делаем 3 канала
 if img.ndim == 2:
     img = np.stack([img] * 3, axis=-1)
 
-# Логарифмическое масштабирование для HDR
-E_hat_log = np.log1p(img)  # log(1 + x) для избежания нулей
+E_hat_log = np.log1p(img)
 normalized = cv2.normalize(E_hat_log, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 cv2.imwrite(save_path + 'input_tonned.png', normalized)
 
 
 
 
-# Загружаем .mat
 data = loadmat("test_results/Kalantari/Proposed/000001.mat")
 hdr = data['HDR']
 
-# Преобразуем в 3 канала (если grayscale)
 if hdr.ndim == 2:
     hdr = np.stack([hdr] * 3, axis=-1)
 
