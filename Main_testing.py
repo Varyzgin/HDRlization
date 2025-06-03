@@ -12,14 +12,14 @@ from TOOLS.ulti_v3 import Generate_HDR_image_with_GaussianWeightv3, Torchtensor2
 
 #################################################### KALANTARI DATASET
 num_of_images = 12
-image_list = sorted(glob.glob("/Kalantari/input" + "/*.*"))
+image_list = sorted(glob.glob("Kalantari/input" + "/*.*"))
 
-image_savename = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+image_savename = ['01', '02']
 
-softmask_list = sorted(glob.glob("/Kalantari/softmask" + "/*.*"))
+softmask_list = sorted(glob.glob("Kalantari/softmask" + "/*.*"))
 
 ###################################################
-device = "cuda:0"
+device = "cpu"
 
 ########################################################## Proposed
 ############### 32x32
